@@ -78,12 +78,13 @@ class HandlerThread implements Runnable {
 
             if((str = reader.readLine()) != null) {
                 if (!str.isEmpty()) {
-                    String[] arrOfStr = str.split(" ", 2);
-                    if (arrOfStr[0].equals("ADD")) {
-
+                    String[] split = str.split(" ", 2);
+                    if (split[0].equals("ADD")) {
+                        String[] address = split[1].split(",", 2);
+                        handleInsert(address[1], address[0]);
                         writer.writeBytes("Successfully added");
-                    } else if (arrOfStr[0].equals("DELETE")) {
-
+                    } else if (split[0].equals("DELETE")) {
+                        handleDelete(1);
                         writer.writeBytes("Successfully deleted");
                     } else {
                         writer.writeBytes("404 Not Found");
@@ -102,8 +103,8 @@ class HandlerThread implements Runnable {
         }
     }
     
-    public void handleInsert(String address, String number) {
-        DatabaseControler.addRide(address, number);
+    public void handleInsert(String street, String number) {
+        DatabaseControler.addRide(street, number);
     }
 
     public void handleDelete(int id) {
