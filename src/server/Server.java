@@ -80,18 +80,18 @@ class HandlerThread implements Runnable {
                 if (!str.isEmpty()) {
                     String[] split = str.split(" ", 2);
                     if (split[0].equals("ADD")) {
-                        String[] address = split[1].split(",", 2);
-                        handleInsert(address[1], address[0]);
-                        writer.writeBytes("Successfully added");
+                        String[] info = split[1].split(",", 3);
+                        int id = handleInsert(info[2], info[0], info[1]);
+                        writer.writeUTF(Integer.toString(id) + " " + split[1]);
                     } else if (split[0].equals("DELETE")) {
-                        handleDelete(1);
-                        writer.writeBytes("Successfully deleted");
+                        handleDelete(Integer.parseInt(split[1].split(" ")[1]));
+                        writer.writeUTF("Successfully deleted");
                     } else {
-                        writer.writeBytes("404 Not Found");
+                        writer.writeUTF("404 Not Found");
                     }
                 }
             } else {
-                writer.writeBytes("Empty request");
+                writer.writeUTF("Empty request");
             }
 
             reader.close();
@@ -103,8 +103,8 @@ class HandlerThread implements Runnable {
         }
     }
     
-    public void handleInsert(String street, String number) {
-        DatabaseControler.addRide(street, number);
+    public int handleInsert(String street, String number, String phone) {
+        return DatabaseControler.addRide(street, number, phone);
     }
 
     public void handleDelete(int id) {

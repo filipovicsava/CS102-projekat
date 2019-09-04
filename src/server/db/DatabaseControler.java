@@ -9,8 +9,9 @@ public class DatabaseControler {
     public static void initDatabase() {
         String sql = "CREATE TABLE IF NOT EXISTS requests (\n"
                 + "	id      INTEGER PRIMARY KEY AUTOINCREMENT,\n"
-                + "	street    CHARACTER(20) NOT NULL UNIQUE ,\n"
-                + "	number    CHARACTER(20) NOT NULL,\n"
+                + "	street    CHARACTER(20) NOT NULL,\n"
+                + "	num    CHARACTER(5) NOT NULL,\n"
+                + "	phone    CHARACTER(15) NOT NULL,\n"
                 + ");";
         try (Connection conn = DriverManager.getConnection(DatabaseControler.URL);
              Statement stmt = conn.createStatement()) {
@@ -21,18 +22,26 @@ public class DatabaseControler {
 
     }
 
-    public static void addRide(String address, String number) {
-        String sql = "INSERT INTO requests (street, number) VALUES (?, ?)";
+    public static int addRide(String street, String number, String phone) {
+        String sql = "INSERT INTO requests (street, num, phone) OUTPUT Inserted.id VALUES (?, ?, ?)";
 
         try (Connection conn = DriverManager.getConnection(DatabaseControler.URL);
              PreparedStatement statement = conn.prepareStatement(sql)) {
-            statement.setString(1, address);
+            statement.setString(1, street);
             statement.setString(2, number);
+            statement.setString(3, phone);
+
+            ResultSet rs = statement.executeQuery(sql.toString());
+            while (rs.next()) {
+                return rs.getInt(1);
+            }
 
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return -1;
     }
 
     public static void cancelRide(int id) {
