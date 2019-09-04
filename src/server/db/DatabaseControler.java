@@ -11,8 +11,8 @@ public class DatabaseControler {
                 + "	id      INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                 + "	street    CHARACTER(20) NOT NULL,\n"
                 + "	num    CHARACTER(5) NOT NULL,\n"
-                + "	phone    CHARACTER(15) NOT NULL,\n"
-                + ");";
+                + "	phone    CHARACTER(15) NOT NULL\n"
+                + ")";
         try (Connection conn = DriverManager.getConnection(DatabaseControler.URL);
              Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
